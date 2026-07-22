@@ -13,13 +13,22 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        name: 'description',
+        content: 'Upload any image and get back its complete design system: colors, gradients, radii, shadows, typography, and ready-to-paste CSS.',
+      },
+      {
+        title: 'Specimen — Image to Design Tokens',
       },
     ],
     links: [
       {
         rel: 'stylesheet',
         href: appCss,
+      },
+      {
+        rel: 'icon',
+        type: 'image/svg+xml',
+        href: '/favicon.svg',
       },
     ],
   }),

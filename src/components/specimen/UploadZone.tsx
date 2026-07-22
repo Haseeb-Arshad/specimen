@@ -66,6 +66,7 @@ export function UploadZone({ onFileSelected, onRejected }: UploadZoneProps) {
         accept="image/*"
         className="upload-zone-input"
         tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
         onChange={(e) => {
           handleFiles(e.target.files)
         }}
