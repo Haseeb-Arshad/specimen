@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400..900;0,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --paper: #F5F6F4;
+  --ink: #181B21;
+  --ink-soft: #5A5F6A;
+  --line: #D8DAD5;
+  --reg: #2B3FEE;
+  --reg-soft: #E7EAFF;
+  --card: #FFFFFF;
+  --error-bg: #FDECEC;
+  --error-border: #E8A5A5;
+  --error-text: #8A1F1F;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Archivo', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+/* -------------------------------------------------- */
+/* Layout                                              */
+/* -------------------------------------------------- */
+
+.specimen-app {
+  min-height: 100vh;
+}
+
+.specimen-shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+@media (max-width: 600px) {
+  .specimen-shell {
+    padding: 0 16px;
+  }
+}
+
+/* -------------------------------------------------- */
+/* Focus                                               */
+/* -------------------------------------------------- */
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--reg);
+  outline-offset: 3px;
+}
+
+/* -------------------------------------------------- */
+/* Buttons                                             */
+/* -------------------------------------------------- */
+
+.btn {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  border: 1px solid var(--ink);
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-solid {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn-solid:hover {
+  background: var(--reg);
+  border-color: var(--reg);
+  color: #fff;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.btn-ghost:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn-ghost.small {
+  padding: 8px 14px;
+  font-size: 10.5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+  .btn:active {
+    transform: none;
+  }
+}
