@@ -7,8 +7,9 @@ import { ScanCard } from '#/components/specimen/ScanCard'
 import { ErrorPanel } from '#/components/specimen/ErrorPanel'
 import { ResultsSheet } from '#/components/specimen/ResultsSheet'
 import { Toast } from '#/components/specimen/Toast'
-import { downscaleImage } from '#/lib/downscaleImage'
-import { copyToClipboard } from '#/lib/copyToClipboard'
+import { downscaleImage, createThumbnail } from '#/lib/downscaleImage'
+import { useCopyToast } from '#/lib/useCopyToast'
+import { saveHistoryEntry } from '#/lib/history'
 import { extractTokens } from '#/server/extractTokens'
 import type { DesignTokens } from '#/lib/tokens'
 
@@ -23,38 +24,20 @@ type LoadedImage = {
 
 type Phase = 'idle' | 'ready' | 'scanning' | 'results' | 'error'
 
-function toastTextFor(value: string): string {
-  const trimmed = value.trim()
-  return trimmed.length <= 32 ? `Copied ${trimmed}` : 'Copied to clipboard'
-}
-
 function Home() {
   const [image, setImage] = useState<LoadedImage | null>(null)
   const [phase, setPhase] = useState<Phase>('idle')
   const [tokens, setTokens] = useState<DesignTokens | null>(null)
   const [errorMessage, setErrorMessage] = useState('')
   const [rejectMessage, setRejectMessage] = useState('')
-  const [toast, setToast] = useState<string | null>(null)
-  const toastTimer = useRef<number | null>(null)
+  const { toast, copy } = useCopyToast()
   const imageUrlRef = useRef<string | null>(null)
 
   useEffect(() => {
     return () => {
       if (imageUrlRef.current) URL.revokeObjectURL(imageUrlRef.current)
-      if (toastTimer.current) window.clearTimeout(toastTimer.current)
     }
   }, [])
-
-  const showToast = (message: string) => {
-    setToast(message)
-    if (toastTimer.current) window.clearTimeout(toastTimer.current)
-    toastTimer.current = window.setTimeout(() => setToast(null), 1400)
-  }
-
-  const handleCopy = async (value: string) => {
-    const ok = await copyToClipboard(value)
-    if (ok) showToast(toastTextFor(value))
-  }
 
   const handleFileSelected = (file: File) => {
     setRejectMessage('')
@@ -99,8 +82,22 @@ function Home() {
       })
 
       if (result.ok) {
-        setTokens(result.tokens as DesignTokens)
+        const tokens = result.tokens as DesignTokens
+        setTokens(tokens)
         setPhase('results')
+
+        try {
+          const thumbnail = await createThumbnail(image.file)
+          saveHistoryEntry({
+            fileName: image.file.name,
+            thumbnail,
+            width: image.width,
+            height: image.height,
+            tokens,
+          })
+        } catch {
+          // history is a convenience, not critical — a failed thumbnail shouldn't block results
+        }
       } else {
         setErrorMessage(result.error || 'Analysis failed — try again, or try a smaller crop of the image.')
         setPhase('error')
@@ -139,7 +136,7 @@ function Home() {
 
         {phase === 'error' ? <ErrorPanel message={errorMessage} onRetry={handleExtract} /> : null}
 
-        {phase === 'results' && tokens ? <ResultsSheet tokens={tokens} onCopy={handleCopy} /> : null}
+        {phase === 'results' && tokens ? <ResultsSheet tokens={tokens} onCopy={copy} /> : null}
       </main>
 
       <Toast message={toast} />

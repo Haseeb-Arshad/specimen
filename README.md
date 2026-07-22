@@ -34,6 +34,15 @@ others.
 Without a key, the app still runs and the upload flow works; clicking
 "Extract tokens" shows a clear error until a key is configured.
 
+## History
+
+Every successful extraction is saved to a **History** page (linked from the
+masthead) so past specimens can be revisited later — thumbnail, filename,
+and the full six-section results sheet, with the same click-to-copy. History
+is stored in the browser's `localStorage`, per-device, capped at the most
+recent 60 specimens; nothing is sent to a server or shared across devices.
+Entries can be deleted individually or cleared all at once.
+
 ## Scripts
 
 ```bash
@@ -44,10 +53,13 @@ npm run preview  # preview the production build
 
 ## Structure
 
-- `src/routes/` — file-based routes (`index.tsx` is the whole app page)
+- `src/routes/` — file-based routes: `index.tsx` (the extractor),
+  `history.tsx` + `history.index.tsx` + `history.$id.tsx` (history list/detail
+  layout)
 - `src/components/specimen/` — UI pieces (masthead, upload zone, scan card,
   results sections, toast)
 - `src/server/extractTokens.ts` — server function that calls OpenRouter and
   defensively parses the returned JSON
+- `src/lib/history.ts` — localStorage-backed history CRUD
 - `src/styles.css` — the full design-token system (colors, type, geometry)
 - `design.md` — the original product/design spec this app was built from
